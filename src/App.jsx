@@ -42,7 +42,7 @@ function App() {
 					borderRadius: 5,
 				}}
 			>
-				<h2>Filters:</h2>
+				<h2>Filters</h2>
 				{Object.keys(ICON_IMAGES).map((key) => (
 					<div key={key} style={{ marginBottom: 4 }}>
 						<input
