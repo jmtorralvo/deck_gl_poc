@@ -4,11 +4,9 @@ import {
 	RenderingType,
 } from "@vis.gl/react-google-maps";
 import React, { useState } from "react";
-import { Route, BrowserRouter as Router, Switch } from "react-router-dom";
 import "./App.css";
 import { ICON_IMAGES } from "./const";
 import Deckgl from "./deckgl/Deckgl";
-import Markers from "./markers/Markers";
 
 function App() {
 	const [filters, setFilters] = useState(Object.keys(ICON_IMAGES));
@@ -97,7 +95,8 @@ function App() {
 					renderingType={RenderingType.VECTOR}
 					disableDefaultUI
 				>
-					<Router>
+					<Deckgl filters={filters} />
+					{/* <Router>
 						<Switch>
 							<Route
 								exact
@@ -106,7 +105,7 @@ function App() {
 							/>
 							<Route exact component={Markers} path="/markers" />
 						</Switch>
-					</Router>
+					</Router> */}
 				</GoogleMap>
 			</APIProvider>
 		</div>
