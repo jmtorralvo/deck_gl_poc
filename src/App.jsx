@@ -7,7 +7,7 @@ import React, { useState } from "react";
 import { Route, BrowserRouter as Router, Switch } from "react-router-dom";
 import "./App.css";
 import { ICON_IMAGES } from "./const";
-import Deckgl from "./deckgl/Deckgl";
+import Deckgl from "./pages/Deckgl";
 
 function App() {
 	const [filters, setFilters] = useState(Object.keys(ICON_IMAGES));
@@ -96,7 +96,6 @@ function App() {
 					renderingType={RenderingType.VECTOR}
 					disableDefaultUI
 				>
-					{/* <Deckgl filters={filters} /> */}
 					<Router>
 						<Switch>
 							<Route

@@ -28,3 +28,10 @@ export const AREAS = [
 	"SOUTH EAST",
 	"SOUTH WEST",
 ];
+
+export const DrawingActionKind = {
+	SET_OVERLAY: "SET_OVERLAY",
+	UPDATE_OVERLAYS: "UPDATE_OVERLAYS",
+	UNDO: "UNDO",
+	REDO: "REDO",
+};

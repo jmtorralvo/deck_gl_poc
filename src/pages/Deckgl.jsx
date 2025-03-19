@@ -1,69 +1,45 @@
-import { GoogleMapsOverlay } from "@deck.gl/google-maps";
 import { IconLayer } from "@deck.gl/layers";
-import { useMap } from "@vis.gl/react-google-maps";
-import React, { useEffect, useMemo, useState } from "react";
+import { ControlPosition, MapControl } from "@vis.gl/react-google-maps";
+import React, { useState } from "react";
+import DeckGLOverlay from "../components/deck-gl-overlay";
+import { UndoRedoControl } from "../components/undo-redo-control";
 import { ICON_IMAGES } from "../const";
-// import IconClusterLayer from "./IconClustererLayer";
-// import iconAtlas from "./data/location-icon-atlas.png";
-// import trees from "../data/mockedTrees.json";
 import audits from "../data/data.json";
-
-const DeckGLOverlay = (props) => {
-	const map = useMap();
-	const overlay = useMemo(
-		() =>
-			new GoogleMapsOverlay({
-				...props,
-			}),
-	);
-
-	useEffect(() => {
-		overlay.setMap(map);
-		return () => overlay.setMap(null);
-	}, [map]);
-
-	// overlay.setProps(props);
-	return null;
-};
+import { useDrawingManager } from "../hooks/use-drawing-manager";
 
 const filterItems = ({ items, filters }) => {
 	return items.filter((item) => filters.includes(item.category));
 };
 
 const Deckgl = ({ filters }) => {
+	const items = filterItems({ items: audits, filters });
 	const [hoverInfo, setHoverInfo] = useState();
-	const [dataFiltered, setDataFiltered] = useState(
-		filterItems({ items: audits, filters }),
-	);
+	const [selectedItems, setSelectedItems] = useState([]);
 
-	console.log("dataFiltered", dataFiltered);
+	const selectItems = (bounds) => {
+		const newItems = items.filter(
+			({ audit_start_coordinates: { lat, lng } }) => {
+				// const lat = item.audit_start_coordinates.lat;
+				// const lng = item.audit_start_coordinates.lng;
+				return bounds.contains({ lat, lng });
+			},
+		);
+		console.log("newItems", newItems);
+		setSelectedItems(newItems);
+	};
+
+	const drawingManager = useDrawingManager({ onSelect: selectItems });
 
 	const layers = [
-		// new ScatterplotLayer({
-		// 	id: "deckgl-circle",
-		// 	data: trees,
-		// 	getPosition: (d) => [d.position.lng, d.position.lat, 0],
-		// 	//getFillColor: [255, 0, 255, 140],
-		// 	// getRadius: 1,
-		// 	//radiusScale: 100,
-		// 	// radiusMinPixels: 1,
-		// 	// radiusMaxPixels: 1,
-		// 	pickable: true,
-		// 	// onHover: (info) => {
-		// 	// 	console.log("info", info);
-		// 	// 	setHoverInfo(info);
-		// 	// },
-		// }),
 		new IconLayer({
 			id: "deckgl-icon",
-			data: dataFiltered,
+			data: items,
 			getColor: [255, 0, 255, 255],
 			sizeUnits: "common",
 			sizeMaxPixels: 40,
 			sizeMinPixels: 4,
 			getIcon: (d) => ({
 				url: ICON_IMAGES[d.category],
-				//url: iconImagesArr[Math.floor(Math.random() * iconImagesArr.length)],
 				width: 40,
 				height: 40,
 				anchorY: 40,
@@ -83,6 +59,9 @@ const Deckgl = ({ filters }) => {
 
 	return (
 		<>
+			<MapControl position={ControlPosition.TOP_CENTER}>
+				<UndoRedoControl drawingManager={drawingManager} />
+			</MapControl>
 			<div
 				style={{
 					position: "absolute",
@@ -95,6 +74,7 @@ const Deckgl = ({ filters }) => {
 			>
 				<h2>DeckGL POC</h2>
 				<p>Amount of elements displayed: {audits.length}</p>
+				<p>Amount of elements selected: {selectedItems.length}</p>
 			</div>
 			{hoverInfo?.object && (
 				<div
