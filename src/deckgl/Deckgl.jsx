@@ -2,37 +2,11 @@ import { GoogleMapsOverlay } from "@deck.gl/google-maps";
 import { IconLayer } from "@deck.gl/layers";
 import { useMap } from "@vis.gl/react-google-maps";
 import React, { useEffect, useMemo, useState } from "react";
+import { ICON_IMAGES } from "../const";
 // import IconClusterLayer from "./IconClustererLayer";
 // import iconAtlas from "./data/location-icon-atlas.png";
 // import trees from "../data/mockedTrees.json";
-import audits from "../data/audit_mock_2.json";
-
-const tooltipStyle = {
-	position: "absolute",
-	pointerEvents: "none",
-	height: 140,
-	width: 100,
-	backgroundColor: "rgba(255, 255, 255, 0.7);",
-	zIndex: 100,
-};
-
-const iconImages = {
-	tree: "https://img.icons8.com/?size=40&id=ALNT1kCnEvgU&format=png",
-	bush: "https://img.icons8.com/?size=40&id=21806&format=png",
-	flower: "https://img.icons8.com/?size=40&id=58781&format=png",
-	grass: "https://img.icons8.com/?size=40&id=58784&format=png",
-	weed: "https://img.icons8.com/?size=40&id=21046&format=png",
-	maple: "https://img.icons8.com/?size=40&id=58786&format=png",
-	ash: "https://img.icons8.com/?size=40&id=20728&format=png",
-	oak: "https://img.icons8.com/?size=40&id=39874&format=png",
-	elm: "https://img.icons8.com/?size=40&id=I8NE0pOnAQKj&format=png",
-	pine: "https://img.icons8.com/?size=40&id=20554&format=png",
-	birch: "https://img.icons8.com/?size=40&id=63770&format=png",
-	beech: "https://img.icons8.com/?size=40&id=5fQBgYGaWfYx&format=png",
-	willow: "https://img.icons8.com/?size=40&id=77987&format=png",
-};
-
-const iconImagesArr = Object.values(iconImages);
+import audits from "../data/data.json";
 
 const DeckGLOverlay = (props) => {
 	const map = useMap();
@@ -52,8 +26,15 @@ const DeckGLOverlay = (props) => {
 	return null;
 };
 
-const Deckgl = () => {
+const filterItems = ({ items, filters }) => {
+	return items.filter((item) => filters.includes(item.category));
+};
+
+const Deckgl = ({ filters }) => {
 	const [hoverInfo, setHoverInfo] = useState();
+	const [dataFiltered, setDataFiltered] = useState(
+		filterItems({ items: audits, filters }),
+	);
 
 	const layers = [
 		// new ScatterplotLayer({
@@ -73,13 +54,14 @@ const Deckgl = () => {
 		// }),
 		new IconLayer({
 			id: "deckgl-icon",
-			data: audits,
+			data: dataFiltered,
 			getColor: [255, 0, 255, 255],
 			sizeUnits: "common",
 			sizeMaxPixels: 40,
 			sizeMinPixels: 4,
 			getIcon: (d) => ({
-				url: iconImagesArr[Math.floor(Math.random() * iconImagesArr.length)],
+				url: ICON_IMAGES[d.category],
+				//url: iconImagesArr[Math.floor(Math.random() * iconImagesArr.length)],
 				width: 40,
 				height: 40,
 				anchorY: 40,
@@ -105,23 +87,25 @@ const Deckgl = () => {
 					height: 100,
 					width: 300,
 					top: 0,
-					left: 20,
+					right: 20,
 					zIndex: 100,
 				}}
 			>
-				<h1>DeckGL POC</h1>
+				<h2>DeckGL POC</h2>
 				<p>Amount of elements displayed: {audits.length}</p>
 			</div>
 			{hoverInfo?.object && (
 				<div
 					style={{
 						position: "absolute",
-						top: "85vh",
+						top: "75vh",
 						left: 20,
 						zIndex: 100,
 					}}
 				>
 					<h2>Item Id:</h2>
+					<p>{hoverInfo.object.title}</p>
+					<p>{hoverInfo.object.area}</p>
 					<p>{hoverInfo.object.id}</p>
 				</div>
 			)}

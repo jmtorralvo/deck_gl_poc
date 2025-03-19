@@ -30,7 +30,8 @@
 		"build": "react-scripts build",
 		"test": "react-scripts test",
 		"eject": "react-scripts eject",
-		"create:trees": "bun bin/create-trees.mjs"
+		"create:trees": "bun bin/create-trees.mjs",
+		"update:data": "bun bin/update-data.mjs"
 	},
 	"eslintConfig": {
 		"extends": ["react-app", "react-app/jest"]

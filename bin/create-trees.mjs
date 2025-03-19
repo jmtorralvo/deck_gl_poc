@@ -1,5 +1,6 @@
-import fs from "node:fs";
 import { faker } from "@faker-js/faker";
+import fs from "node:fs";
+import { ICON_IMAGES } from "../src/const";
 
 function getData(amount) {
 	const foo = faker.helpers.multiple(
@@ -10,22 +11,7 @@ function getData(amount) {
 				lat: faker.location.latitude({ min: 50, max: 56 }),
 				lng: faker.location.longitude({ min: -6, max: 0 }),
 			},
-			category: faker.helpers.arrayElement([
-				"tree",
-				"bush",
-				"flower",
-				"grass",
-				"weed",
-				"maple",
-				"ash",
-				"oak",
-				"elm",
-				"pine",
-				"birch",
-				"beech",
-				"willow",
-			]),
-			// type: faker.helpers.arrayElement(["pin", "html"]),
+			category: faker.helpers.arrayElement(Object.values(ICON_IMAGES)),
 			zIndex: faker.number.int(100),
 		}),
 		{
