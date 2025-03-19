@@ -36,6 +36,8 @@ const Deckgl = ({ filters }) => {
 		filterItems({ items: audits, filters }),
 	);
 
+	console.log("dataFiltered", dataFiltered);
+
 	const layers = [
 		// new ScatterplotLayer({
 		// 	id: "deckgl-circle",
