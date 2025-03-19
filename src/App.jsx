@@ -4,12 +4,7 @@ import {
 	RenderingType,
 } from "@vis.gl/react-google-maps";
 import React, { useState } from "react";
-import {
-	Redirect,
-	Route,
-	BrowserRouter as Router,
-	Switch,
-} from "react-router-dom";
+import { Route, BrowserRouter as Router, Switch } from "react-router-dom";
 import "./App.css";
 import { ICON_IMAGES } from "./const";
 import Deckgl from "./deckgl/Deckgl";
@@ -107,10 +102,9 @@ function App() {
 							<Route
 								exact
 								component={() => <Deckgl filters={filters} />}
-								path="/deckgl"
+								path="/"
 							/>
 							<Route exact component={Markers} path="/markers" />
-							<Redirect to="/deckgl" />
 						</Switch>
 					</Router>
 				</GoogleMap>
