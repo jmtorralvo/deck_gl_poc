@@ -11,20 +11,18 @@ const filterItems = ({ items, filters }) => {
 	return items.filter((item) => filters.includes(item.category));
 };
 
+const isSelected = ({ item, selectedItems }) =>
+	selectedItems.some((selectedItem) => selectedItem.id === item.id);
+
 const Deckgl = ({ filters }) => {
 	const items = filterItems({ items: audits, filters });
 	const [hoverInfo, setHoverInfo] = useState();
 	const [selectedItems, setSelectedItems] = useState([]);
 	const [selectMode, setSelectMode] = useState(false);
 
-	const isSelected = (item) =>
-		selectedItems.some((selectedItem) => selectedItem.id === item.id);
-
 	const selectItems = (bounds) => {
 		const newItems = items.filter(
 			({ audit_start_coordinates: { lat, lng } }) => {
-				// const lat = item.audit_start_coordinates.lat;
-				// const lng = item.audit_start_coordinates.lng;
 				return bounds.contains({ lat, lng });
 			},
 		);
@@ -66,14 +64,18 @@ const Deckgl = ({ filters }) => {
 				id: "deckgl-icon",
 				data: items,
 				getColor: (d) => {
-					const alpha = selectMode ? 128 : 255;
-					return [255, 0, 255, alpha];
+					// Handle Alpha makes it slower
+					// const alpha =
+					// 	selectMode && !isSelected({ item: d, selectedItems }) ? 128 : 255;
+					return [0, 255, 255, 255];
 				},
 				sizeUnits: "common",
 				sizeMaxPixels: 40,
 				sizeMinPixels: 4,
 				getIcon: (d) => ({
-					url: ICON_IMAGES[d.category],
+					url: isSelected({ item: d, selectedItems })
+						? "https://img.icons8.com/?size=96&id=63312&format=png"
+						: ICON_IMAGES[d.category],
 					width: 40,
 					height: 40,
 					anchorY: 40,
@@ -86,19 +88,16 @@ const Deckgl = ({ filters }) => {
 				pickable: true,
 				onClick: (info) => {
 					if (selectMode) {
+						// When selectMode is enabled
 						toggleSelectionItem(info.object);
 					} else {
-						console.log("info", info);
 						setHoverInfo(info);
 					}
 				},
 			}),
 		];
 		return newlayers;
-	}, [selectMode]);
-
-	// const layers = useMemo(() => {
-	// 	}), []}
+	}, [selectMode, selectedItems, items]);
 
 	return (
 		<>

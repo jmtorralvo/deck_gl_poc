@@ -14,7 +14,7 @@ export function useDrawingManager({ initialValue = null, onSelect }) {
 		// https://developers.google.com/maps/documentation/javascript/reference/drawing
 		const newDrawingManager = new drawing.DrawingManager({
 			map,
-			drawingMode: window.google.maps.drawing.OverlayType.RECTANGLE,
+			//drawingMode: window.google.maps.drawing.OverlayType.RECTANGLE,
 			drawingControl: true,
 			drawingControlOptions: {
 				position: window.google.maps.ControlPosition.TOP_CENTER,
@@ -41,7 +41,6 @@ export function useDrawingManager({ initialValue = null, onSelect }) {
 			rectangleOptions: {
 				editable: true,
 				draggable: true,
-				fillColor: "#FF0000",
 			},
 			// polylineOptions: {
 			// 	editable: true,
